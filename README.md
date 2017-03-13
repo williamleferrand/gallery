@@ -1,4 +1,4 @@
-[![Slack Status](http://accret.io/badge.svg)](https://accret.io)
+[![Slack Status](http://slackin.accret.io/badge.svg)](http://accret.io)
 
 # Gallery
 
