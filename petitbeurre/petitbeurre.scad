@@ -39,7 +39,7 @@ FontSize=7;
 
 BladeWidth=0.2;
 
-EjectorTolerance=0.8;
+EjectorTolerance=1.6;
 
 res=20; /* this is the $fn value - the higher, the longer the rendering time is */
 
@@ -47,8 +47,8 @@ res=20; /* this is the $fn value - the higher, the longer the rendering time is 
 
 module teeth(Spacing, teethlength) {
      translate([Spacing/2, 0, 0]) {
-     square([TeethWidth - Spacing, teethlength - Spacing/2]);
-     translate([(TeethWidth - Spacing)/2, teethlength ]) circle((TeethWidth - Spacing)/2, $fn=res, center=true);
+          square([TeethWidth - Spacing, teethlength ]);
+          translate([(TeethWidth - Spacing)/2, teethlength ]) circle((TeethWidth - Spacing)/2, $fn=res, center=true);
      }
 }
 
@@ -130,14 +130,14 @@ module label(position, t, tolerance) {
                     text(t, size= FontSize, font = "Rebel bones", halign="center");
           }
      } else {
-        minkowski() {
+        /* minkowski() {
               sphere(tolerance/2);
               linear_extrude(height = MoldHeight-MoldRecess, center = false, convexity = 10, twist = 0, scale=[1, 1]) {
                    
                    translate([0, position, 0])
                         text(t, size= FontSize, font = "Rebel bones", halign="center");
               }
-         } 
+         }  */
      }
 }
 
@@ -154,17 +154,17 @@ module cutter(tolerance, fontTolerance) {
                shape(BladeWidth+tolerance, TeethLength+tolerance/2);
           }
           
-          translate([CookieLength/2-5, CookieWidth/2-5, 0 ]) 
-               cylinder(MoldHeight, 3, 3, $fn=res);
+          translate([CookieLength/2-5 + tolerance, CookieWidth/2-5 + tolerance, 0 ]) 
+               cylinder(MoldHeight, 3+tolerance/2, 3+tolerance/2, $fn=res);
           
-          translate([CookieLength/2-5, -(CookieWidth/2-5), 0 ]) 
-               cylinder(MoldHeight, 3, 3, $fn=res);
+          translate([CookieLength/2-5 + tolerance, -(CookieWidth/2-5)- tolerance, 0 ]) 
+               cylinder(MoldHeight, 3+tolerance/2, 3+tolerance/2, $fn=res);
           
-          translate([-(CookieLength/2-5), CookieWidth/2-5, 0 ]) 
-               cylinder(MoldHeight, 3, 3, $fn=res);
+          translate([-(CookieLength/2-5)  - tolerance, CookieWidth/2-5  + tolerance, 0 ]) 
+               cylinder(MoldHeight, 3+tolerance/2, 3+tolerance/2, $fn=res);
           
-          translate([-(CookieLength/2-5), -(CookieWidth/2-5), 0 ]) 
-               cylinder(MoldHeight, 3, 3, $fn=res);
+          translate([-(CookieLength/2-5) - tolerance, -(CookieWidth/2-5) - tolerance, 0 ]) 
+               cylinder(MoldHeight, 3+tolerance/2, 3+tolerance/2, $fn=res);
      }
 
      
@@ -198,10 +198,11 @@ module ejector() {
      cylinder(2*MoldHeight, 3, 3);
 }
 
+translate([0, 0, -5])
 ejector();
-/*
-cutter(0);
 
+cutter(0);
+/*
 difference() {
      translate([0, 0, MoldHeight])
           cube([CookieLength+15, CookieWidth+15, MoldBaseHeight], center=true);
