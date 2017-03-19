@@ -22,7 +22,7 @@
  */
 
 MoldHeight=10;
-MoldRecess=2;
+MoldRecess=1;
 MoldBaseHeight=2;
 
 CookieLength=72.4;
@@ -37,9 +37,9 @@ TeethOffset=4;
 DotDiameter=1.5;
 FontSize=7;
 
-BladeWidth=0.2;
+BladeWidth=1.0;
 
-EjectorTolerance=1.6;
+EjectorTolerance=2;
 
 res=20; /* this is the $fn value - the higher, the longer the rendering time is */
 
@@ -53,7 +53,7 @@ module teeth(Spacing, teethlength) {
 }
 
 module ear(Spacing) {
-     resize([12-2*Spacing,8-2*Spacing])circle(5, $fn=res);
+     resize([12-Spacing,8-Spacing])circle(5, $fn=res);
 }
 
 module quadrant(Spacing, teethlength) {
@@ -130,7 +130,7 @@ module label(position, t, tolerance) {
                     text(t, size= FontSize, font = "Rebel bones", halign="center");
           }
      } else {
-        /* minkowski() {
+       /*  minkowski() {
               sphere(tolerance/2);
               linear_extrude(height = MoldHeight-MoldRecess, center = false, convexity = 10, twist = 0, scale=[1, 1]) {
                    
@@ -198,11 +198,12 @@ module ejector() {
      cylinder(2*MoldHeight, 3, 3);
 }
 
+/*
 translate([0, 0, -5])
 ejector();
-
+*/
 cutter(0);
-/*
+
 difference() {
      translate([0, 0, MoldHeight])
           cube([CookieLength+15, CookieWidth+15, MoldBaseHeight], center=true);
@@ -214,4 +215,4 @@ difference() {
 }
      
 
-*/
+
