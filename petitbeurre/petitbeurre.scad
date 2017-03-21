@@ -35,14 +35,14 @@ TeethLength=7;
 TeethOffset=4;
 
 DotDiameter=1.6;
-FontSize=6;
+FontSize=5;
 
 BladeWidth=1.0;
 
 EjectorTolerance=1.4;
 EjectorHeight=4;
 
-PusherRadius=2;
+PusherRadius=3;
 
 res=20; /* this is the $fn value - the higher, the longer the rendering time is */
 
@@ -126,21 +126,21 @@ module dots(tolerance) {
 
 /* the text. you need to install the Rebel bones font on your system, or to use another font */
 module label(position, t, tolerance) {
-     if (tolerance == 0.0) {
+     module thetext() {
           linear_extrude(height = MoldHeight-MoldRecess, center = false, convexity = 10, twist = 0) {
                
                translate([0, position, 0])
                     text(t, size= FontSize, font = "Rebel bones", halign="center", valign = "center");
           }
+     }
+     
+     if (tolerance == 0.0) {
+          thetext();
      } else {
-       /* minkowski() {
-              sphere(tolerance/2);
-              linear_extrude(height = MoldHeight-MoldRecess, center = false, convexity = 10, twist = 0) {
-                   
-                   translate([0, position, 0])
-                        text(t, size= FontSize, font = "Rebel bones", halign="center", valign = "center");
-              }
-         }   */
+
+          translate([0, position, (MoldHeight+MoldRecess)/2])
+          cube([4.4*len(t) + tolerance, 5 + tolerance,  MoldHeight-MoldRecess], center=true);
+          
      }
 }
 
@@ -193,28 +193,32 @@ module base() {
 
 module pushers(tolerance) {
    translate([CookieLength/2 * 2/3, 0, -MoldBaseHeight + MoldHeight])
-        cylinder(MoldHeight+5, PusherRadius+tolerance, PusherRadius+tolerance);
+        cylinder(MoldHeight+5, PusherRadius+tolerance, PusherRadius+tolerance, $fn=res);
       translate([- CookieLength/2 * 2/3, 0, -MoldBaseHeight + MoldHeight])
-           cylinder(MoldHeight+5, PusherRadius+tolerance, PusherRadius+tolerance);
+           cylinder(MoldHeight+5, PusherRadius+tolerance, PusherRadius+tolerance, $fn=res);
 }
 
-module ejector() {
-     difference() {
-          translate([0, 0, -2*MoldBaseHeight])
+
+module ejector_base() {
+     translate([0, 0, -2*MoldBaseHeight])
                translate([0, 0, MoldHeight])
                cube([CookieLength+12, CookieWidth+12, EjectorHeight], center=true);
-      
+}
+module ejector() {
+     difference() {
+          ejector_base();
           cutter(EjectorTolerance);
      }
      pushers(0);
 }
 
 
-translate([0, 0, -10])
-ejector(); 
+//translate([0, 0, -10])
 
-cutter(0);
-difference() {
+ejector();
+
+//cutter(0);
+/*difference() {
      translate([0, 0, MoldHeight])
           cube([CookieLength+15, CookieWidth+15, MoldBaseHeight], center=true);
      
@@ -223,3 +227,4 @@ difference() {
   
 
 
+*/
