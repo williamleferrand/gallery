@@ -213,18 +213,15 @@ module ejector() {
 }
 
 
-//translate([0, 0, -10])
-
+translate([0, CookieWidth + 20, 20])
+rotate([180, 0, 0])
 ejector();
 
-//cutter(0);
-/*difference() {
+cutter(0);
+difference() {
      translate([0, 0, MoldHeight])
           cube([CookieLength+15, CookieWidth+15, MoldBaseHeight], center=true);
      
      pushers(EjectorTolerance);
 }
   
-
-
-*/
